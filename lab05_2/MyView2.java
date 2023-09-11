@@ -88,7 +88,7 @@ public class MyView2 extends HorizontalLayout {
                     .bodyToMono(String.class)
                     .block();
 
-            System.out.println("addSen : " + out);
+            System.out.println(out);
             Notification notification = Notification.show(out);
             notification.setPosition(Notification.Position.BOTTOM_START);
 
@@ -102,29 +102,16 @@ public class MyView2 extends HorizontalLayout {
                     .bodyToMono(Sentence.class)
                     .block();
 
-            System.out.println("showSen : ");
-            goodSen.setValue(out.goodSentences.toString());
-            badSen.setValue(out.badSentences.toString());
+            System.out.println("out");
+            System.out.println("out2" + out);
 
-//            Sentence sentence = getSentence();
-//            goodSen.setValue(sentence.goodSentences.toString());
-//            badSen.setValue(sentence.badSentences.toString());
+            goodSen.setValue(Word.class.toString());
+            badSen.setValue(out.badSentences.toString());
 
         });
 
 
     }
-//    private Sentence getSentence(){
-//        Sentence out = WebClient.create()
-//                .get()
-//                .uri("http://localhost:8080/getSentence")
-//                .retrieve()
-//                .bodyToMono(Sentence.class)
-//                .block();
-//        System.out.println("out" + out);
-//
-//        return out;
-//    }
 
 
 

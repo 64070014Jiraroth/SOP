@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
-@Service
+//@Service
 @RestController
 public class WordPublisher {
     @Autowired
@@ -65,10 +65,12 @@ public class WordPublisher {
             return "Found Bad and Good Word";
         }
     }
-    @RequestMapping(value = "/getSentence", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+
+//    , produces = MediaType.APPLICATION_JSON_VALUE
+    @RequestMapping(value = "/getSentence", method = RequestMethod.GET)
     public Sentence getSentence() {
         System.out.println("RequestMapping getSentence");
-        Object out = rabbitTemplate.convertSendAndReceive("GetQueue", "queue", "");
+        Object out = rabbitTemplate.convertSendAndReceive("Direct", "queue", "");
         return ((Sentence) out);
 
     }
