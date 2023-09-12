@@ -13,6 +13,7 @@ public class WizardController {
 
     @Autowired
     private WizardService wizardService;
+
     @RequestMapping(value = "/wizards", method = RequestMethod.GET)
     public ResponseEntity<?> getWizard() {
         List<Wizard> wizards = wizardService.retrieveWizards();
@@ -46,9 +47,11 @@ public class WizardController {
         }
         else { return false; }
     }
-    @RequestMapping(value = "/deleteWizard/{name}", method = RequestMethod.POST)
-    public boolean deleteWizard(@PathVariable("name")String name) {
-        Wizard wizard = wizardService.retrieveWizardByName(name);
+    @RequestMapping(value = "/deleteWizard", method = RequestMethod.POST)
+    public boolean deleteWizard(
+//            @RequestParam("name")String name,
+            @RequestParam("id") String id){
+        Wizard wizard = wizardService.retrieveWizardByName(id);
         return wizardService.deleteWizard(wizard);
     }
 

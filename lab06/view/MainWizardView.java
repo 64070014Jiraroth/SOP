@@ -21,7 +21,6 @@ import java.util.ArrayList;
 
 @Route(value = "mainPage.it")
 public class MainWizardView extends VerticalLayout {
-    WebClient webClient = WebClient.create();
     TextField name = new TextField();
     RadioButtonGroup<String> gender = new RadioButtonGroup<>("Gender :");
     HorizontalLayout h1 = new HorizontalLayout();
@@ -59,20 +58,23 @@ public class MainWizardView extends VerticalLayout {
         prev.addClickListener(buttonClickEvent -> {this.backward();});
         next.addClickListener(buttonClickEvent -> {this.forward();});
 
-//        create.addClickListener(event -> {
+        create.addClickListener(event -> {
+//            Wizard wizard = new Wizard(gender.getValue().toString(), name.getValue(), school.getValue().toString(), position.getValue().toString(), dollars.getValue().toString(), house.getValue().toString());
 //           Wizard wizard = new Wizard(String.valueOf(gender.getValue()), name.getValue(), String.valueOf(school.getValue()), String.valueOf(position.getValue()), String.valueOf(dollars.getValue()), String.valueOf(house.getValue()));
-//            String output = String.valueOf(webClient.post().uri("http://localhost:8080/addWizard").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).body(BodyInserters.fromValue(wizard)).retrieve().bodyToMono(String.class).block());;
+//            String output = String.valueOf(WebClient.create().post().uri("http://localhost:8080/addWizard").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).body(BodyInserters.fromValue(wizard)).retrieve().bodyToMono(String.class).block());;
 //            wizards = this.getWizards();
 //            current = getWizards().size()-1;
 //            System.out.println(output);
-//
-//        });
-//        delete.addClickListener(buttonClickEvent -> {
-//            String output = String.valueOf(webClient.post().uri("http://localhost:8080/deleteWizard/"+wizards.get(current).get_id()).retrieve().bodyToMono(String.class).block());
-//            wizards = this.getWizards();
-//            this.backward();
-//            System.out.println(output);
-//        });
+
+        });
+
+        delete.addClickListener(buttonClickEvent -> {
+            String output = String.valueOf(WebClient.create().post().uri("http://localhost:8080/deleteWizard"+wizards.get(current).get_id()).retrieve().bodyToMono(String.class).block());
+            wizards = this.getWizards();
+            this.backward();
+            System.out.println("current : " + wizards.get(current));
+//            System.out.println("deleted : "+ output);
+        });
 
     }
 
@@ -102,7 +104,7 @@ public class MainWizardView extends VerticalLayout {
     }
 
     public ArrayList<Wizard> getWizards() {
-        ArrayList<Wizard> response = webClient.get().uri("http://localhost:8080/wizards").retrieve().bodyToMono(ArrayList.class).block();
+        ArrayList<Wizard> response = WebClient.create().get().uri("http://localhost:8080/wizards").retrieve().bodyToMono(ArrayList.class).block();
         ObjectMapper mapper = new ObjectMapper();
         ArrayList<Wizard> wizards = mapper.convertValue(response, new TypeReference<ArrayList<Wizard>>() {});
         return wizards;
