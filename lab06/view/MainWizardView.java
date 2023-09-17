@@ -21,20 +21,20 @@ import java.util.ArrayList;
 
 @Route(value = "mainPage.it")
 public class MainWizardView extends VerticalLayout {
-    TextField name = new TextField();
+    TextField name = new TextField("Fullname");
     RadioButtonGroup<String> gender = new RadioButtonGroup<>("Gender :");
     HorizontalLayout h1 = new HorizontalLayout();
-    ComboBox<String> position = new ComboBox<>();
+    ComboBox<String> position = new ComboBox<>("Position");
     NumberField dollars = new NumberField("Dollars");
-    ComboBox<String> school = new ComboBox<>();
-    ComboBox<String> house = new ComboBox<>();
+    ComboBox<String> school = new ComboBox<>("School");
+    ComboBox<String> house = new ComboBox<>("House");
     ArrayList<Wizard> wizards;
     int current = 0;
     public MainWizardView() {
         name.setPlaceholder("Fullname");
         gender.setItems("Male", "Female");
         position.setItems("Student", "Teacher");
-        position.setPlaceholder("Position");
+//        position.setPlaceholder("Position");
 
 
         dollars.setPrefixComponent(new Span("$"));
@@ -59,21 +59,56 @@ public class MainWizardView extends VerticalLayout {
         next.addClickListener(buttonClickEvent -> {this.forward();});
 
         create.addClickListener(event -> {
-//            Wizard wizard = new Wizard(gender.getValue().toString(), name.getValue(), school.getValue().toString(), position.getValue().toString(), dollars.getValue().toString(), house.getValue().toString());
-//           Wizard wizard = new Wizard(String.valueOf(gender.getValue()), name.getValue(), String.valueOf(school.getValue()), String.valueOf(position.getValue()), String.valueOf(dollars.getValue()), String.valueOf(house.getValue()));
-//            String output = String.valueOf(WebClient.create().post().uri("http://localhost:8080/addWizard").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).body(BodyInserters.fromValue(wizard)).retrieve().bodyToMono(String.class).block());;
-//            wizards = this.getWizards();
-//            current = getWizards().size()-1;
-//            System.out.println(output);
+            System.out.println("in create btn");
+            Wizard wizard = new Wizard(String.valueOf(gender.getValue()), String.valueOf(name.getValue()), String.valueOf(school.getValue()), String.valueOf(house.getValue()), dollars.getValue(), String.valueOf(position.getValue()));
+            System.out.println("wizard : " + wizard);
+
+            String output = String.valueOf(WebClient.create()
+                    .post()
+                    .uri("http://localhost:8080/addWizard")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .body(BodyInserters.fromValue(wizard))
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block());
+
+            System.out.println("output : " + output);
+            wizards = this.getWizards();
+            current = getWizards().size()-1;
+            System.out.println(output);
 
         });
 
+        update.addClickListener(buttonClickEvent -> {
+            Wizard wizard = new Wizard(String.valueOf(gender.getValue()), name.getValue(), String.valueOf(school.getValue()), String.valueOf(house.getValue()), (dollars.getValue()), String.valueOf(position.getValue()));
+            System.out.println("wizard : " + wizard);
+            System.out.println("current.get_id() : " + wizards.get(current).get_id());
+            String output = String.valueOf(WebClient.create()
+                    .post()
+                    .uri("http://localhost:8080/updateWizard/"+ wizards.get(current).get_id())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .body(BodyInserters.fromValue(wizard))
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block());
+            wizards = this.getWizards();
+            System.out.println("output : " + output);
+        });
+
         delete.addClickListener(buttonClickEvent -> {
-            String output = String.valueOf(WebClient.create().post().uri("http://localhost:8080/deleteWizard"+wizards.get(current).get_id()).retrieve().bodyToMono(String.class).block());
+            String output = String.valueOf(WebClient.create().post()
+                    .uri("http://localhost:8080/deleteWizard/"+wizards.get(current).get_id())
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block());
+
             wizards = this.getWizards();
             this.backward();
-            System.out.println("current : " + wizards.get(current));
-//            System.out.println("deleted : "+ output);
+
+            System.out.println("current : " + wizards.get(current).get_id());
+            System.out.println("output : "+ output);
         });
 
     }

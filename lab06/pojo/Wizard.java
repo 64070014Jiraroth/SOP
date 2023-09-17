@@ -20,9 +20,8 @@ public class Wizard implements Serializable {
 
     public Wizard() {}
 
-//    public Wizard(String s, String value, String s, String valueOf, String s1, String string1) {}
-    public Wizard(String _id, String sex, String name, String school, String house, Double money, String position) {
-        this._id = _id;
+    public Wizard( String sex, String name, String school, String house, Double money, String position) {
+//        this._id = _id;
         this.sex = sex;
         this.name = name;
         this.school = school;
