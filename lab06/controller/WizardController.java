@@ -20,40 +20,38 @@ public class WizardController {
         return ResponseEntity.ok(wizards);
     }
 
-    @RequestMapping(value = "/addWizard", method = RequestMethod.POST)
-    public ResponseEntity<?> addWizard(
-            @RequestParam("name") String name,
-            @RequestParam("gender") String gender,
-            @RequestParam("dollars") Double dollars,
-            @RequestParam("school") String school,
-            @RequestParam("house") String house,
-            @RequestParam("position") String position){
-        Wizard n = wizardService.addWizard(new Wizard(null,gender, name, school, house, dollars, position));
-        return ResponseEntity.ok(n);
+//    @RequestMapping(value = "/addWizard", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+//    public ResponseEntity<?> addWizard(
+//            @RequestParam("name") String name,
+//            @RequestParam("gender") String gender,
+//            @RequestParam("dollars") Double dollars,
+//            @RequestParam("school") String school,
+//            @RequestParam("house") String house,
+//            @RequestParam("position") String position){
+//        Wizard n = new Wizard(null,gender, name, school, house, dollars, position);
+//        String response = wizardService.saveWizard(n);
+//        System.out.println("n : " + n);
+//        System.out.println("response : " + response);
+//        return ResponseEntity.ok(response);
+//    }
+
+    @RequestMapping(value = "/addWizard", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+    public ResponseEntity<?> addWizard(@RequestBody Wizard wizard)  {
+        String response = wizardService.addWizard(wizard);
+        return ResponseEntity.ok(response);
     }
-    @RequestMapping(value = "/updateWizard", method = RequestMethod.POST)
-    public boolean updateWizard(
-            @RequestParam("oldName") String oldName,
-            @RequestParam("gender") String gender,
-            @RequestParam("name") String name,
-            @RequestParam("school") String school,
-            @RequestParam("house") String house,
-            @RequestParam("money") Double money,
-            @RequestParam("position") String position){
-        Wizard wizard = wizardService.retrieveWizardByName(oldName);
-        if (wizard != null) {
-            wizardService.updateWizard(new Wizard(wizard.get_id(), gender, name, school, house, money, position));
-            return true;
-        }
-        else { return false; }
+
+    @RequestMapping(value ="/updateWizard/{_id}", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+    public ResponseEntity<?> updateWizard(@PathVariable("_id") String _id, @RequestBody Wizard wizard) {
+        String response = wizardService.updateWizard(_id, wizard);
+        return ResponseEntity.ok(response);
     }
-    @RequestMapping(value = "/deleteWizard", method = RequestMethod.POST)
-    public boolean deleteWizard(
-//            @RequestParam("name")String name,
-            @RequestParam("id") String id){
-        Wizard wizard = wizardService.retrieveWizardByName(id);
-        return wizardService.deleteWizard(wizard);
+    @RequestMapping(value = "/deleteWizard/{_id}", method = RequestMethod.POST)
+    public ResponseEntity<?> deleteWizard(@PathVariable("_id") String _id) {
+        String wizard = wizardService.deleteWizard(_id);
+        return ResponseEntity.ok(wizard);
     }
+
 
 
 }

@@ -1,6 +1,7 @@
 package com.example.lab06.repository;
 
 import com.example.lab06.pojo.Wizard;
+import com.example.lab06.pojo.Wizards;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
@@ -21,17 +22,34 @@ public class WizardService {
     public Wizard retrieveWizardByName(String name) {
         return repository.findByName(name);
     }
-    public Wizard addWizard(Wizard wizard){
-        return repository.save(wizard);
-    }
-    public boolean updateWizard(Wizard wizard) {
-        try { repository.save(wizard); return true; }
-        catch (Exception e) { return false; }
+    public String addWizard(Wizard wizard) {
+        repository.save(wizard);
+        return "Added Successfully";
     }
 
-    public boolean deleteWizard(Wizard wizard) {
-        try { repository.delete(wizard); return true; }
-        catch (Exception e) { return false; }
+    public String updateWizard(String _id, Wizard updateWizard) {
+        Optional<Wizard> findingWizard = repository.findById(_id);  //updateWizard.get_id()
+        if (findingWizard.isPresent()) {
+            Wizard wizard = findingWizard.get();
+            wizard.setName(updateWizard.getName());
+            wizard.setHouse(updateWizard.getHouse());
+            wizard.setSchool(updateWizard.getSchool());
+            wizard.setMoney(updateWizard.getMoney());
+            wizard.setSex(updateWizard.getSex());
+            wizard.setPosition(updateWizard.getPosition());
+            repository.save(wizard);
+            return "Updated Successfully";
+        }
+        return "Wizard not found";
+    }
+
+    public String deleteWizard(String _id) {
+        Optional<Wizard> findingWizard = repository.findById(_id);
+        if (findingWizard.isPresent()) {
+            repository.deleteById(_id);
+            return "Deleted Successfully";
+        }
+        return "Wizard not found";
     }
 
 
